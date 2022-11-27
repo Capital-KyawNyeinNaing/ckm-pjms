@@ -1,0 +1,27 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+    
+    strategy:
+      matrix:
+        node-version: [16.x]
+        
+       
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        cache: 'yarn'
+    - run: rm -rf node_modules && yarn install
+    - run: sudo su
+    - run: sudo pm2 restart backend
+
