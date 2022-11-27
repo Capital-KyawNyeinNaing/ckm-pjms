@@ -1,6 +1,7 @@
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../util/errorres');
 
+// get all
 exports.getAll = (Model) =>
   asyncHandler(async (req, res, next) => {
     console.log(Model);
@@ -90,7 +91,7 @@ exports.getAll = (Model) =>
     });
   });
 
-// @desc:     get one
+// get one
 exports.getOneById = (Model) =>
   asyncHandler(async (req, res, next) => {
     console.log(req.query);
@@ -114,7 +115,7 @@ exports.getOneById = (Model) =>
     });
   });
 
-// @desc:     create one
+// create
 exports.createOne = (Model, popOptions) =>
   asyncHandler(async (req, res, next) => {
     if (req.user?._id) {
@@ -142,7 +143,7 @@ exports.createOne = (Model, popOptions) =>
     });
   });
 
-// @desc:     update one
+// update
 exports.updateOne = (Model, popOptions) =>
   asyncHandler(async (req, res, next) => {
     if (req.user?._id) req.body.userId = req.user._id;
@@ -169,6 +170,7 @@ exports.updateOne = (Model, popOptions) =>
     });
   });
 
+// delete one
 exports.deleteOne = (Model) =>
   asyncHandler(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
@@ -182,7 +184,7 @@ exports.deleteOne = (Model) =>
     });
   });
 
-// @desc: delete many
+// delete many
 exports.deleteMany = (Model) =>
   asyncHandler(async (req, res, next) => {
     let deleteIds = req?.body?.data?.ids;

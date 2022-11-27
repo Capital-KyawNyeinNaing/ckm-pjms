@@ -2,16 +2,12 @@ const Role = require("../model/Role");
 const ErrorResponse = require("../util/errorres");
 const asyncHandler = require("../middleware/async");
 
-// @desc:     get all role
-// @route:    get /api/v1/role
-// @access:   private/admin
+// get all role
 exports.getAllRole = asyncHandler(async (req, res, next) => {
   res.status(200).json(res.advancedResult);
 });
 
-// @desc:     get role by id
-// @route:    get /api/v1/role/:id
-// @access:   private/admin
+// get role by id
 exports.getRoleById = asyncHandler(async (req, res, next) => {
   let role = await Role.findById(req.params.id);
 
@@ -25,9 +21,7 @@ exports.getRoleById = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc:     create role
-// @route:    post /api/v1/role
-// @access:   private/admin
+// create role
 exports.createRole = asyncHandler(async (req, res, next) => {
   const { roleName } = req.body;
   let role = await Role.findOne({ roleName }).populate("permissions");
@@ -44,9 +38,7 @@ exports.createRole = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc:     update role
-// @route:    put /api/v1/role/:id
-// @access:   private/admin
+// update role
 exports.updateRole = asyncHandler(async (req, res, next) => {
   let role = await Role.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -59,9 +51,7 @@ exports.updateRole = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc:     delete role
-// @route:    delete /api/v1/role/:id
-// @access:   private/admin
+// delete role
 exports.deleteRole = asyncHandler(async (req, res, next) => {
   let role = await Role.findById(req.params.id);
 

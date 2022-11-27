@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const {
   getAllRole,
@@ -6,16 +6,16 @@ const {
   createRole,
   updateRole,
   deleteRole,
-} = require("../controller/role.controller");
-const Role = require("../model/Role");
-const advancedResult = require("../middleware/advancedResult");
+} = require('../controller/role.controller');
+const Role = require('../model/Role');
+const advancedResult = require('../middleware/advancedResult');
 
 const router = express.Router({ mergeParams: true });
 
 // router.use(protect);
 
 router
-  .route("/")
+  .route('/')
   .get(
     // authorize("role", "list"),
     advancedResult(Role),
@@ -27,7 +27,7 @@ router
   );
 
 router
-  .route("/:id")
+  .route('/:id')
   .get(
     // authorize("role", "detail"),
     getRoleById

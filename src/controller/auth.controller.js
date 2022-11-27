@@ -1,39 +1,37 @@
-const crypto = require("crypto");
+const crypto = require('crypto');
 
-const { User } = require("../model/User");
-const PendingUser = require("../model/PendingUser");
-const ErrorResponse = require("../util/errorres");
-const asyncHandler = require("../middleware/async");
-const sendEmail = require("../util/sendEmail");
+const { User } = require('../model/User');
+const PendingUser = require('../model/PendingUser');
+const ErrorResponse = require('../util/errorres');
+const asyncHandler = require('../middleware/async');
+const sendEmail = require('../util/sendEmail');
 
 exports.checkOTP = asyncHandler(async (req, res, next) => {
   const { email, otpCode } = req.body;
 
   if (!email)
-    return next(new ErrorResponse(400, "Please provide email address"));
+    return next(new ErrorResponse(400, 'Please provide email address'));
 
-  if (!otpCode) return next(new ErrorResponse(400, "Please provide OTP code"));
+  if (!otpCode) return next(new ErrorResponse(400, 'Please provide OTP code'));
 
   const pendingUser = await PendingUser.findOne({ email });
 
   // 1) Check if requested user exists
   if (!pendingUser)
-    return next(new ErrorResponse(400, "You are not requested user"));
+    return next(new ErrorResponse(400, 'You are not requested user'));
 
   // 2) Check if OTP matches
   if (pendingUser.otpCode !== otpCode) {
-    return next(new ErrorResponse(400, "Incorrect OTP"));
+    return next(new ErrorResponse(400, 'Incorrect OTP'));
   }
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: pendingUser,
   });
 });
 
-// @desc:     sign up
-// @route:    post /api/v1/auth/signUp
-// @access:   public
+// signup
 exports.signUp = asyncHandler(async (req, res, next) => {
   const { name, email, password, roleId, companyId, image, contactNumber } =
     req.body;
@@ -51,9 +49,7 @@ exports.signUp = asyncHandler(async (req, res, next) => {
   await sendCookieResponse(user, 200, res);
 });
 
-// @desc:     sign in
-// @route:    post /api/v1/auth/signIn
-// @access:   public
+// signin
 exports.signIn = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -62,9 +58,9 @@ exports.signIn = asyncHandler(async (req, res, next) => {
   }
 
   // check exit in db
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select('+password');
 
-  console.log("user => ", user);
+  console.log('user => ', user);
 
   if (!user) {
     return next(new ErrorResponse(401, `Invalid Credential`));
@@ -74,43 +70,27 @@ exports.signIn = asyncHandler(async (req, res, next) => {
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
-    console.log("match");
+    console.log('match');
     return next(new ErrorResponse(401, `Invalid Credential`));
   }
 
   await sendCookieResponse(user, 200, res);
 });
 
-// @desc:     signOut user
-// @route:    post /api/v1/auth/signOut
-// @access:   private
+// signout
 exports.signOut = asyncHandler(async (req, res, next) => {
-  res.cookie("token", "none", {
+  res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
 
   res.status(200).json({
     success: true,
-    data: {},
+    data: null,
   });
 });
 
-// @desc:     get current login user
-// @route:    post /api/v1/auth/me
-// @access:   private
-exports.getCurrentLoginUser = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id);
-
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
-});
-
-// @desc:     forgot password
-// @route:    post /api/v1/auth/forgotpassword
-// @access:   public
+// forgot password
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
@@ -124,7 +104,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   // create resetUrl
   let resetUrl = `${req.protocol}://${req.get(
-    "host"
+    'host'
   )}/api/v1/auth/resetpassword/${resetToken}`;
 
   let message = `You are receiving this email because you has requested the reset of a password.Please make a PUT request to \n\n ${resetUrl}`;
@@ -132,11 +112,11 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   try {
     await sendEmail({
       email: user.email,
-      subject: "Password reset token",
+      subject: 'Password reset token',
       message,
     });
 
-    res.status(200).json({ success: true, data: "Send Email" });
+    res.status(200).json({ success: true, data: 'Send Email' });
   } catch (err) {
     console.log(err);
     user.resetPasswordWebToken = undefined;
@@ -144,7 +124,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     await user.save({ ValidateBeforeSave: false });
 
-    return next(new ErrorResponse(500, "Email could not sent"));
+    return next(new ErrorResponse(500, 'Email could not sent'));
   }
 
   res.status(200).json({
@@ -153,16 +133,14 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc:     reset password
-// @route:    put /api/v1/auth/resetpassword/:resettoken
-// @access:   public
+// reset password
 exports.resetPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
 
   let resetPasswordWebToken = await crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(req.params.resettoken)
-    .digest("hex");
+    .digest('hex');
 
   // check resetPasswordWebToken and resetPasswordExpire
   let user = await User.findOne({
@@ -171,7 +149,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    return next(new ErrorResponse(400, "Invalid token"));
+    return next(new ErrorResponse(400, 'Invalid token'));
   }
   user.password = password;
   user.resetPasswordWebToken = undefined;
@@ -181,11 +159,37 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   await sendCookieResponse(user, 200, res);
 });
 
-// @desc:     update user detail
-// @route:    post /api/v1/auth/userdetail
-// @access:   private
+// change password
+exports.changePassword = asyncHandler(async (req, res, next) => {
+  const { current_pass, new_pass } = req.body;
+
+  let user = await User.findById(req.user.id).select('+password');
+
+  // check current password
+  let isMatch = await user.matchPassword(current_pass);
+  if (!isMatch) {
+    return next(new ErrorResponse(400, 'incorrect password'));
+  }
+
+  user.password = new_pass;
+  await user.save();
+
+  await sendCookieResponse(user, 200, res);
+});
+
+// get user
+exports.getCurrentLoginUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+// user details
 exports.userDetail = asyncHandler(async (req, res, next) => {
-  console.log("req", req.user, req.body);
+  console.log('req', req.user, req.body);
   const { name, email } = req.body;
 
   let updateDetail = {
@@ -204,26 +208,6 @@ exports.userDetail = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc:     change password
-// @route:    post /api/v1/auth/changepassword
-// @access:   private
-exports.changePassword = asyncHandler(async (req, res, next) => {
-  const { current_pass, new_pass } = req.body;
-
-  let user = await User.findById(req.user.id).select("+password");
-
-  // check current password
-  let isMatch = await user.matchPassword(current_pass);
-  if (!isMatch) {
-    return next(new ErrorResponse(400, "incorrect password"));
-  }
-
-  user.password = new_pass;
-  await user.save();
-
-  await sendCookieResponse(user, 200, res);
-});
-
 // get jwt token from models and send cookie res
 const sendCookieResponse = async (user, statusCode, res) => {
   const token = await user.getSignedToken();
@@ -235,11 +219,11 @@ const sendCookieResponse = async (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === 'production') {
     options.secure = true;
   }
 
-  res.status(statusCode).cookie("token", token, options).json({
+  res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token,
   });

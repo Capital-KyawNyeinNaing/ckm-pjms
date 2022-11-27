@@ -21,13 +21,14 @@ dotenv.config({ path: './config.env' });
 connectDb();
 
 //* route file
-const auth = require('./routes/auth.routes');
-const user = require('./routes/user.routes');
-const role = require('./routes/role.routes');
-const permission = require('./routes/permission.routes');
-const pendingUser = require('./routes/pendingUser.routes');
-const member = require('./routes/member.routes');
-const company = require('./routes/company.routes');
+const auth = require('./routes/auth.route');
+const user = require('./routes/user.route');
+const role = require('./routes/role.route');
+const permission = require('./routes/permission.route');
+const pendingUser = require('./routes/pendingUser.route');
+const member = require('./routes/member.route');
+const company = require('./routes/company.route');
+const task = require('./routes/task.route');
 
 const app = express();
 
@@ -80,6 +81,7 @@ app.use(`/api/v1/permission`, permission);
 app.use(`/api/v1/pendingUser`, pendingUser);
 app.use('/api/v1/member', member);
 app.use('/api/v1/company', company);
+app.use('/api/v1/task', task);
 app.use(errorHandler);
 
 let PORT = process.env.PORT || 5000;

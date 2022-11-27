@@ -2,16 +2,12 @@ const Permission = require('../model/Permission')
 const ErrorResponse = require('../util/errorres')
 const asyncHandler = require('../middleware/async')
 
-// @desc:     get all permission
-// @route:    get /api/v1/permission
-// @access:   private/admin
+// get all permission
 exports.getAllPermission = asyncHandler(async (req, res, next) => {
   res.status(200).json(res.advancedResult)
 })
 
-// @desc:     get permission by id
-// @route:    get /api/v1/permission/:id
-// @access:   private/admin
+// get permission by id
 exports.getPermissionById = asyncHandler(async (req, res, next) => {
   let permission = await Permission.findById(req.params.id)
 
@@ -25,9 +21,7 @@ exports.getPermissionById = asyncHandler(async (req, res, next) => {
   })
 })
 
-// @desc:     create permission
-// @route:    post /api/v1/permission
-// @access:   private/admin
+// create permission
 exports.createPermission = asyncHandler(async (req, res, next) => {
   const { name } = req.body
   let permission = await Permission.findOne({ name })
@@ -44,9 +38,7 @@ exports.createPermission = asyncHandler(async (req, res, next) => {
   })
 })
 
-// @desc:     update permission
-// @route:    put /api/v1/permission/:id
-// @access:   private/admin
+// update permission
 exports.updatePermission = asyncHandler(async (req, res, next) => {
   let permission = await Permission.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -59,9 +51,7 @@ exports.updatePermission = asyncHandler(async (req, res, next) => {
   })
 })
 
-// @desc:     delete permission
-// @route:    delete /api/v1/permission/:id
-// @access:   private/admin
+// delete permission
 exports.deletePermission = asyncHandler(async (req, res, next) => {
   let permission = await Permission.findById(req.params.id)
 

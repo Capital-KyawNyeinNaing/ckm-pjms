@@ -7,12 +7,10 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "src/config/config.env" });
 
 // load model
-const Assessment = require("./model/assessment");
 const Company = require("./model/company");
 const File = require("./model/file");
 const Permission = require("./model/permission");
 const Role = require("./model/role");
-const Stage = require("./model/stage");
 const { User } = require("./model/user");
 
 // connect db

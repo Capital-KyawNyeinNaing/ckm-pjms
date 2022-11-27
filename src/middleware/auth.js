@@ -18,12 +18,12 @@ exports.protect = asyncHandler(async (req, res, next) => {
     // set token from cookies
     token = req.cookies.token;
   } else {
-    return next(new ErrorHandler(401, `Unauthorized to access for this route`));
+    return next(new ErrorHandler(401, 'Unauthorized: Access is denied due to invalid credentials!'));
   }
 
   // make sure token exit
   if (!token) {
-    return next(new ErrorHandler(401, `Unauthorized to access for this route`));
+    return next(new ErrorHandler(401, 'Unauthorized: Access is denied due to invalid credentials!'));
   }
 
   try {
@@ -36,7 +36,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
     next();
   } catch (err) {
-    return next(new ErrorHandler(401, `Unauthorized to access for this route`));
+    return next(new ErrorHandler(401, 'Unauthorized: Access is denied due to invalid credentials!'));
   }
 });
 
