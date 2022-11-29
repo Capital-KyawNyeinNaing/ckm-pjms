@@ -30,6 +30,7 @@
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "otp-generator": "^4.0.0",
+    "pug": "^3.0.2",
     "query-string": "^7.1.1",
     "slugify": "^1.6.5",
     "swagger-jsdoc": "^6.2.5",

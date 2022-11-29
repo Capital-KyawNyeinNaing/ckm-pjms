@@ -1,24 +1,24 @@
 const nodemailer = require('nodemailer');
 
-const sendEmail = async (emailOptions, smtpOptions) => {
+const sendEmail = async (option) => {
   let transporter = nodemailer.createTransport({
-    host: smtpOptions.host,
-    port: smtpOptions.port,
+    host: 'smtp.gmail.com',
+    port: 587,
     secure: false, // upgrade later with STARTTLS
     auth: {
-      user: smtpOptions.email,
-      pass: smtpOptions.password,
+      user: 'tonywynn.dev@gmail.com',
+      pass: 'gjhpldfyongobajn',
     },
   });
 
-  const recipients = emailOptions.recipients;
+  const emails = option.emails;
 
-  recipients.forEach(async (recipient) => {
+  emails.forEach(async (email) => {
     let info = await transporter.sendMail({
-      from: smtpOptions.name,
-      to: recipient,
-      subject: emailOptions.subject,
-      text: emailOptions.message,
+      from: 'thetpai.tp27@gmail.com',
+      to: email,
+      subject: option.subject,
+      text: option.message,
     });
 
     console.log('Message sent: %s', info.messageId);

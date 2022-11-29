@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema(
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
         'Please add a valid email',
       ],
+      unique: true,
     },
     password: {
       type: String,
@@ -34,6 +35,11 @@ const UserSchema = new mongoose.Schema(
     roleId: {
       type: mongoose.Schema.ObjectId,
       ref: 'Role',
+    },
+    companyId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Company',
+      required: true,
     },
     resetPasswordWebToken: String,
     resetPasswordExpire: Date,
