@@ -14,13 +14,13 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const errorHandler = require('./middleware/error');
 const connectDb = require('./server');
 
-//* load env
+// load env
 dotenv.config({ path: './config.env' });
 
-//* connect db
+// connect db
 connectDb();
 
-//* route file
+// route file
 const auth = require('./routes/auth.route');
 const user = require('./routes/user.route');
 const role = require('./routes/role.route');
@@ -32,30 +32,30 @@ const task = require('./routes/task.route');
 
 const app = express();
 
-//* file upload
+// file upload
 app.use('/src/asset/upload', express.static('src/asset/upload'));
 
-//* body paser
+// body paser
 app.use(express.json());
 
-//* cookie setup
+// cookie setup
 app.use(cookieParser());
 
-//* cors
+// cors
 app.use(cors());
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-//* data sanitize
+// data sanitize
 app.use(mongoSanitize());
 
 const swaggerDocsOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Juncture Backend',
+      title: 'PJMS',
       version: '1.0.0',
     },
   },
@@ -63,14 +63,18 @@ const swaggerDocsOptions = {
 };
 
 app.get('/', (req, res) => {
-  res.send('Juncture ATS Backend');
+  res.send(`Server is running ${process.env.NODE_ENV} mode. 🚀`);
 });
 
-//* swagger setup
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Hey', message: 'Hello there!' });
+});
+
+// swagger setup
 const swaggerDocument = swaggerJsdoc(swaggerDocsOptions);
 app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-//* mount route
+// mount route
 /**
  * @swagger
  */
