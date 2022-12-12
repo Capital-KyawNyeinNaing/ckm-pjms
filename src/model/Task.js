@@ -15,9 +15,17 @@ const TaskSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'File',
     },
-    createdBy: {
+    task_status: {
+      type: String,
+      enum: ['open', 'improgress', 'resolved', 'closed'],
+      required: [true, 'Task status is required!'],
+    },
+    task_assigned: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: 'Member',
+    },
+    timeline: {
+      type: Date,
     },
   },
   { timestamps: true }

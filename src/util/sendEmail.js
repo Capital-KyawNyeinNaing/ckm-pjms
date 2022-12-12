@@ -15,7 +15,7 @@ const sendEmail = async (option) => {
 
   emails.forEach(async (email) => {
     let info = await transporter.sendMail({
-      from: 'thetpai.tp27@gmail.com',
+      from: process.env.FROM_EMAIL,
       to: email,
       subject: option.subject,
       text: option.message,
