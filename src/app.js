@@ -1,17 +1,19 @@
-const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-// const logger = require('./middleware/logger')
 const morgan = require('morgan');
-const colors = require('colors');
-const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+const colors = require('colors');
 
+// swagger imports
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+// error handling
 const errorHandler = require('./middleware/error');
+
+// db
 const connectDb = require('./server');
 
 // load env
@@ -29,6 +31,7 @@ const pendingUser = require('./routes/pendingUser.route');
 const member = require('./routes/member.route');
 const company = require('./routes/company.route');
 const task = require('./routes/task.route');
+const project = require('./routes/project.route');
 
 const app = express();
 
@@ -51,17 +54,17 @@ if (process.env.NODE_ENV === 'development') {
 // data sanitize
 app.use(mongoSanitize());
 
-const swaggerDocsOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'PJMS',
-      version: '1.0.0',
-    },
-  },
-  apis: ['server.js'], // files containing annotations as above
-};
+// swagger setup
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use(
+  '/api/v1/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, {
+    explorer: true,
+  })
+);
 
+// mount routes
 app.get('/', (req, res) => {
   res.send(`Server is running ${process.env.NODE_ENV} mode. 🚀`);
 });
@@ -70,14 +73,6 @@ app.get('/', (req, res) => {
   res.render('index', { title: 'Hey', message: 'Hello there!' });
 });
 
-// swagger setup
-const swaggerDocument = swaggerJsdoc(swaggerDocsOptions);
-app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-// mount route
-/**
- * @swagger
- */
 app.use(`/api/v1/auth`, auth);
 app.use(`/api/v1/user`, user);
 app.use(`/api/v1/role`, role);
@@ -86,6 +81,7 @@ app.use(`/api/v1/pendingUser`, pendingUser);
 app.use('/api/v1/member', member);
 app.use('/api/v1/company', company);
 app.use('/api/v1/task', task);
+app.use('/api/v1/project', project);
 app.use(errorHandler);
 
 let PORT = process.env.PORT || 5000;

@@ -1,93 +1,26 @@
 const asyncHandler = require('../middleware/async');
+const APIFeatures = require('../util/apiFeatures');
 const ErrorResponse = require('../util/errorres');
 
 // get all
 exports.getAll = (Model) =>
   asyncHandler(async (req, res, next) => {
-    console.log(Model);
-    let query;
-    console.log(req.query);
-    // copy req query
-    let reqQuery = { ...req.query };
+    const count = await Model.countDocuments();
 
-    // field to exclude
-    const removeField = ['select', 'sort', 'page', 'limit'];
+    const features = new APIFeatures(Model.find(), req.query)
+      .filter()
+      .sort()
+      .select()
+      .populate()
+      .paginate(count);
 
-    // loop over remove and delete item from reqQuery
-    removeField.forEach((item) => delete reqQuery[item]);
-
-    let queryStr = JSON.stringify(reqQuery);
-
-    queryStr = queryStr.replace(/\b(gt|lt|gte|lte)\b/g, (match) => `$${match}`);
-
-    let jsonObj = JSON.parse(queryStr);
-    let newObj = {};
-
-    Object.keys(jsonObj).forEach(function (key, index) {
-      if (jsonObj?.[key].indexOf(',') > -1) {
-        let tmp = jsonObj?.[key].split(',');
-        newObj[key] = tmp;
-      } else {
-        newObj[key] = jsonObj?.[key];
-      }
-    });
-
-    // find query
-    query = Model.find(newObj);
-
-    // load query select
-    if (req.query.select) {
-      let field = req.query.select.split(',').join(' ');
-      query = query.select(field);
-    }
-
-    // load query sort
-    if (req.query.sort) {
-      let sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-createAt');
-    }
-
-    // population
-    if (req.query.populate) {
-      const popOptions = req.query.populate.split(',').join(' ');
-      // console.log(popOptions);
-      query = query.populate(popOptions);
-    }
-
-    // pagination
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10);
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-
-    query = query.skip(startIndex).limit(limit);
-
-    let pagination = {};
-    const total = await Model.countDocuments();
-
-    if (endIndex < total) {
-      pagination.next = {
-        page: page + 1,
-        limit,
-      };
-    }
-
-    if (startIndex > 0) {
-      pagination.next = {
-        page: page - 1,
-        limit,
-      };
-    }
-
-    let results = await query;
+    const data = await features.query;
 
     res.status(200).json({
       success: true,
-      count: results.length,
-      pagination,
-      data: results,
+      count: data.length,
+      pagination: features.pagination,
+      data,
     });
   });
 

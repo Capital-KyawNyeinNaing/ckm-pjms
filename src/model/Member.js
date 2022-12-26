@@ -15,10 +15,6 @@ const MemberSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Phone number field is required'],
     },
-    createdBy: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    },
   },
   { timestamps: true }
 );

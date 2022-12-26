@@ -5,15 +5,15 @@ const RoleSchema = new mongoose.Schema(
     roleName: {
       type: String,
       trim: true,
-      required: [true, 'Role name field is required!'],
+      required: [true, 'Role name is required!'],
     },
     roleType: {
       type: String,
-      required: [true, 'Role type field is required!'],
+      required: [true, 'Role type is required!'],
     },
     roleDescription: {
       type: String,
-      required: [true, 'Role description field is required!'],
+      required: [true, 'Role description is required!'],
     },
     status: {
       type: String,

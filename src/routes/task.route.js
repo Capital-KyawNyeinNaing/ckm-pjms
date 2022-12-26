@@ -16,11 +16,6 @@ router.use(protect);
 
 router.route('/').get(getAllTasks).post(createTask);
 
-router
-  .route('/:id')
-  .get(getTaskById)
-  .put(updateTask)
-  .delete(deleteTask)
-  .delete(deleteTasks);
+router.route('/:id').get(getTaskById).put(updateTask).delete(deleteTask);
 
 module.exports = router;

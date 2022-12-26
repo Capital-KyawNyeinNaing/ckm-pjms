@@ -5,25 +5,33 @@ const TaskSchema = new mongoose.Schema(
     taskName: {
       type: String,
       trim: true,
-      required: [true, 'Name field is required'],
+      required: [true, 'Task name is required!'],
     },
     taskDescription: {
       type: String,
-      required: [true, 'Description field is required!'],
+      required: [true, 'Task description is required!'],
+    },
+    companyId: {
+      type: mongoose.Schema.ObjectId,
+      required: [true, 'Company ID is required!'],
+      ref: 'Company',
     },
     attachment: {
       type: mongoose.Schema.ObjectId,
       ref: 'File',
     },
-    task_status: {
+    taskStatus: {
       type: String,
       enum: ['open', 'improgress', 'resolved', 'closed'],
       required: [true, 'Task status is required!'],
     },
-    task_assigned: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Member',
-    },
+    taskAssigned: [
+      {
+        type: mongoose.Schema.ObjectId,
+        required: [true, 'Task assign members is required!'],
+        ref: 'Member',
+      },
+    ],
     timeline: {
       type: Date,
     },

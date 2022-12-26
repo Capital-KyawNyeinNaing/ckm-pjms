@@ -5,19 +5,19 @@ const PermissionSchema = new mongoose.Schema(
     name: {
       type: String,
       trim: true,
-      required: [true, "Please add a permission name"],
+      required: [true, "Permission name is required!"],
     },
     key: {
       type: String,
-      required: [true, "Please add a key"],
+      required: [true, "Permission key is required!"],
     },
     description: {
       type: String,
-      required: [true, "Please add a permission description"],
+      required: [true, "Permission description is required!"],
     },
     action: {
       type: String,
-      required: [true, "Please add a action description"],
+      required: [true, "Permission action is required!"],
     },
     status: {
       type: String,

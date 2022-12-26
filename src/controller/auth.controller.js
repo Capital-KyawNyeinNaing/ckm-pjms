@@ -60,8 +60,6 @@ exports.signIn = asyncHandler(async (req, res, next) => {
   // check exit in db
   const user = await User.findOne({ email }).select('+password');
 
-  console.log('user => ', user);
-
   if (!user) {
     return next(new ErrorResponse(401, `Invalid Credential`));
   }
@@ -224,7 +222,8 @@ const sendCookieResponse = async (user, statusCode, res) => {
   }
 
   res.status(statusCode).cookie('token', token, options).json({
-    success: true,
+    status: 'success',
     token,
+    data: user,
   });
 };

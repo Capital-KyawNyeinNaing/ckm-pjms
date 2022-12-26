@@ -29,15 +29,12 @@ router
 router
   .route("/:id")
   .get(
-    // authorize("permission", "detail"),
     getPermissionById
   )
   .put(
-    // authorize("permission", "update"),
     updatePermission
   )
   .delete(
-    // authorize("permission", "detail"),
     deletePermission
   );
 

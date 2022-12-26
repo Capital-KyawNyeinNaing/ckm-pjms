@@ -6,7 +6,7 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       trim: true,
       unique: true,
-      required: [true, 'Please add a company name'],
+      required: [true, 'Company name is required!'],
     },
     ownerName: {
       type: String,
@@ -26,12 +26,12 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       match: [
         /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
-        'Please use a valid URL with HTTP or HTTPS',
+        'Please use a valid URL with HTTP or HTTPS!',
       ],
     },
     description: {
       type: String,
-      required: [true, 'Please add a company description.'],
+      required: [true, 'Company description is requied!'],
     },
     logo: {
       type: mongoose.Schema.ObjectId,
