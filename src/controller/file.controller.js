@@ -1,7 +1,7 @@
 const File = require('../model/File');
 const AppError = require('../util/appError');
 const catchAsync = require('../util/catchAsync');
-const baseController = require('./baseController');
+const baseController = require('./base.controller');
 
 exports.getAllFiles = baseController.getAll(File);
 exports.getFileById = baseController.getOneById(File);
@@ -21,7 +21,7 @@ exports.createFiles = catchAsync(async (req, res, next) => {
         name: file.originalname,
         type: file.mimetype,
         description: req.body?.description || null,
-        path: file.path,
+        path: file.path.split('uploads/')[1],
         size: file.size,
       });
     })

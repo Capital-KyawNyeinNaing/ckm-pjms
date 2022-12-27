@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const colors = require('colors');
+var path = require('path');
 
 // swagger imports
 const swaggerUi = require('swagger-ui-express');
@@ -22,7 +23,7 @@ dotenv.config({ path: './config.env' });
 // connect db
 connectDb();
 
-// route file
+// route imports
 const auth = require('./routes/auth.route');
 const user = require('./routes/user.route');
 const role = require('./routes/role.route');
@@ -32,11 +33,12 @@ const member = require('./routes/member.route');
 const company = require('./routes/company.route');
 const task = require('./routes/task.route');
 const project = require('./routes/project.route');
+const file = require('./routes/file.route');
 
 const app = express();
 
-// file upload
-app.use('/src/asset/upload', express.static('src/asset/upload'));
+// set static path
+app.use('/images', express.static(path.join(__dirname, '../public/uploads/images')))
 
 // body paser
 app.use(express.json());
@@ -82,6 +84,7 @@ app.use('/api/v1/member', member);
 app.use('/api/v1/company', company);
 app.use('/api/v1/task', task);
 app.use('/api/v1/project', project);
+app.use('/api/v1/file', file);
 app.use(errorHandler);
 
 let PORT = process.env.PORT || 5000;

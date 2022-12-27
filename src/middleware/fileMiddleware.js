@@ -4,7 +4,7 @@ const AppError = require('../util/appError.js');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let destination = 'public';
+    let destination = 'public/uploads';
 
     if (file.fieldname === 'image') {
       destination += '/images';
@@ -16,9 +16,10 @@ const storage = multer.diskStorage({
   },
 
   filename: (req, file, cb) => {
+    const splitFileName = file.originalname.split('.')
     cb(
       null,
-      `${Date.now()}-${Math.round(Math.random() * 1e9)}-${file.originalname}`
+      `${splitFileName[0]}-${Date.now()}-${Math.round(Math.random() * 1e9)}.${splitFileName[1]}`
     );
   },
 });
