@@ -11,6 +11,13 @@ const ProjectSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Description field is required'],
     },
+    includeMember: [
+      {
+        type: mongoose.Schema.ObjectId,
+        required: [true, 'Task assign members is required!'],
+        ref: 'Member',
+      },
+    ],
     companyId: {
       type: mongoose.Schema.ObjectId,
       required: [true, 'Company ID is required'],

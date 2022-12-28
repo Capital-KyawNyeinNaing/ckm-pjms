@@ -29,7 +29,7 @@ const TaskSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Task assign members is required!'],
-        ref: 'Member',
+        ref: 'Project',
       },
     ],
     timeline: {
