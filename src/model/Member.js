@@ -15,13 +15,20 @@ const MemberSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Phone number field is required'],
     },
-    projectId: [
-      {
-        type: mongoose.Schema.ObjectId,
-        required: [true, 'Project ID is required'],
-        ref: 'Project',
-      },
-    ],
+    projectId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Company',
+      required: true,
+    },
+    roleId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Role'
+    },
+    companyId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Company',
+      required: true,
+    },
   },
   { timestamps: true }
 );

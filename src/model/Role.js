@@ -20,6 +20,11 @@ const RoleSchema = new mongoose.Schema(
       enum: ['active', 'deleted'],
       default: 'active',
     },
+    companyId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Company',
+      required: true,
+    },
     createdBy: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',

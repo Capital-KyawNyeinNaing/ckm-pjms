@@ -11,11 +11,22 @@ const ProjectSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Description field is required'],
     },
+    projectImage: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'File',
+    },
     includeMember: [
       {
         type: mongoose.Schema.ObjectId,
         required: [true, 'Task assign members is required!'],
         ref: 'Member',
+      },
+    ],
+    tasks: [
+      {
+        type: mongoose.Schema.ObjectId,
+        required: [true, 'Task field is required!'],
+        ref: 'Task',
       },
     ],
     companyId: {

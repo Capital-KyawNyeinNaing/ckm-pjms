@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
 const { User } = require('../model/User');
+const Company = require('../model/Company');
 const PendingUser = require('../model/PendingUser');
 const ErrorResponse = require('../util/errorres');
 const asyncHandler = require('../middleware/async');
@@ -210,6 +211,18 @@ exports.userDetail = asyncHandler(async (req, res, next) => {
 const sendCookieResponse = async (user, statusCode, res) => {
   const token = await user.getSignedToken();
 
+  console.log(user);
+
+  const companyQuery = Company.findById(user.companyId);
+  const company = await companyQuery;
+
+  const data = {
+    ...user._doc,
+    company,
+  };
+
+  delete data.companyId;
+
   const options = {
     expires: new Date(
       Date.now() + (process.env.COOKIE_EXPIRE || 30) * 24 * 60 * 60 * 1000
@@ -221,9 +234,11 @@ const sendCookieResponse = async (user, statusCode, res) => {
     options.secure = true;
   }
 
+  console.log(data);
+
   res.status(statusCode).cookie('token', token, options).json({
     status: 'success',
     token,
-    data: user,
+    data,
   });
 };
